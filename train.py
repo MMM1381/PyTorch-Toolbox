@@ -11,7 +11,7 @@ from src.datasets import TimeSeriesDataset, get_cifar10_datasets
 from src.utils import get_score_functions, plotter
 
 # --- Configuration ---
-TASK = "price"  # Options: "price" or "cifar10"
+TASK = "cifar10"  # Options: "price" or "cifar10"
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 100
 NUM_EPOCHS = 5 # Reduced for demo purposes, set to 150 for real run
