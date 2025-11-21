@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, root_mean_squared_error, accuracy_score
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, root_mean_squared_error, accuracy_score, f1_score, recall_score, precision_score
 
 def moveTo(obj, device):
     """
@@ -30,8 +30,12 @@ def get_score_functions(task_type):
             'R2': r2_score,
         }
     elif task_type == 'classification':
+        # Using 'weighted' average for multi-class problems like CIFAR-10
         return {
-            'Accuracy': accuracy_score
+            'Accuracy': accuracy_score,
+            'F1': lambda y_true, y_pred: f1_score(y_true, y_pred, average='weighted', zero_division=0),
+            'Recall': lambda y_true, y_pred: recall_score(y_true, y_pred, average='weighted', zero_division=0),
+            'Precision': lambda y_true, y_pred: precision_score(y_true, y_pred, average='weighted', zero_division=0),
         }
     else:
         raise ValueError(f"Unknown task type: {task_type}")

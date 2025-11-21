@@ -125,9 +125,25 @@ class Trainer:
             for k, v in train_metrics.items(): self.history[f"train {k}"].append(v)
             for k, v in val_metrics.items(): self.history[f"val {k}"].append(v)
 
-            # Print Progress
-            metric_str = " | ".join([f"{k}: {v:.4f}" for k, v in val_metrics.items()])
-            print(f"Epoch {epoch+1}/{num_epochs} | Train Loss: {train_loss:.5f} | Val Loss: {val_loss:.5f} | {metric_str}")
+            # --- Custom Print Format ---
+            print(f'Epoch {epoch+1}/{num_epochs}:')
+            
+            # Train Line
+            train_metrics_str = ', '.join([
+                f'{k}: {v[-1]:.4f}' for k, v in self.history.items() 
+                if k.startswith("train ") and k != "train loss"
+            ])
+            # We use regex or explicit check to avoid double comma if no metrics exist
+            train_connector = ", " if train_metrics_str else ""
+            print(f'Train - Loss: {self.history["train loss"][-1]:.4f}{train_connector}{train_metrics_str}')
+
+            # Val Line
+            val_metrics_str = ', '.join([
+                f'{k}: {v[-1]:.4f}' for k, v in self.history.items() 
+                if k.startswith("val ") and k != "val loss"
+            ])
+            val_connector = ", " if val_metrics_str else ""
+            print(f'Val   - Loss: {self.history["val loss"][-1]:.4f}{val_connector}{val_metrics_str}')
 
             # Save Best Model (based on Val Loss)
             if val_loss < best_val_loss:
